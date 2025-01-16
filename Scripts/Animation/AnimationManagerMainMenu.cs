@@ -4,6 +4,8 @@ using DG.Tweening;
 
 public class AnimationManagerMainMenu : MonoBehaviour
 {
+    private float elapsedTime = 0f;
+
     [SerializeField] private RectTransform startButton;
     private float startButtonTweenDuration = 1.5f;
     private float startButtonInitialPosition = -520f;
@@ -12,52 +14,28 @@ public class AnimationManagerMainMenu : MonoBehaviour
     private float startButtonFloatSpeed = .5f;
     private float startButtonFloatAmplitude = 15f;
 
+    // ------------------------------------------------------------------------------------------------------
+
     [SerializeField] private RectTransform gameNamePanel;
     private float gameNameTweenDuration = .7f;
     private float gameNameInitialPosition = 1000f;
     private float gameNameFinalPosition = 0f;
+
+    // ------------------------------------------------------------------------------------------------------
 
     [SerializeField] private RectTransform difficultyPanel;
     private float difficultyTweenDuration = .9f;
     private float difficultyInitialPosition = -5020f;
     private float difficultyFinalPosition = -100f;
 
+    // ------------------------------------------------------------------------------------------------------
 
     [SerializeField] private TMP_Text floatingText; 
     private float charFloatSpeed = 2f;             
     private float charFloatAmplitude = 10f;       
     private bool isAnimatingCharacters = true;    
 
-    private float elapsedTime = 0f;
-
-
-    private void Start()
-    {
-        SetupInitialPosition();
-        OnStartEnter();
-        OnGameNameEnter();
-    }
-
-    private void Update()
-    {
-        OnDifficultyEnter();
-        StartButtonFloat();
-
-        if (isAnimatingCharacters)
-        {
-            AnimateFloatingText();
-        }
-    }
-
-    private void SetupInitialPosition()
-    {
-        startButton.anchoredPosition = new Vector2(startButton.anchoredPosition.y, startButtonInitialPosition);
-        difficultyPanel.anchoredPosition = new Vector2(difficultyPanel.anchoredPosition.x, difficultyInitialPosition);
-
-        Vector2 gameNamePosition = gameNamePanel.anchoredPosition;
-        gameNamePosition.x = -gameNameInitialPosition * 2;
-        gameNamePanel.anchoredPosition = gameNamePosition;
-    }
+    // ------------------------------------------------------------------------------------------------------
 
     public void OnStartEnter()
     {
@@ -85,15 +63,15 @@ public class AnimationManagerMainMenu : MonoBehaviour
         {
             TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
 
-            // Get the vertices of the character
+            // get vertex of each char
             int vertexIndex = charInfo.vertexIndex;
             int materialIndex = charInfo.materialReferenceIndex;
             Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
 
-            // Calculate the floating effect
+            // calculate floating effect
             float offset = Mathf.Sin(Time.time * charFloatSpeed + i * 0.3f) * charFloatAmplitude;
 
-            // Apply the floating effect
+            // apply
             vertices[vertexIndex + 0].y += offset;
             vertices[vertexIndex + 1].y += offset;
             vertices[vertexIndex + 2].y += offset;
@@ -115,5 +93,33 @@ public class AnimationManagerMainMenu : MonoBehaviour
         {
             difficultyPanel.DOAnchorPosY(difficultyFinalPosition, difficultyTweenDuration);
         }
+    }
+    
+    private void Start()
+    {
+        SetupInitialPosition();
+        OnStartEnter();
+        OnGameNameEnter();
+    }
+
+    private void Update()
+    {
+        OnDifficultyEnter();
+        StartButtonFloat();
+
+        if (isAnimatingCharacters)
+        {
+            AnimateFloatingText();
+        }
+    }
+
+    private void SetupInitialPosition()
+    {
+        startButton.anchoredPosition = new Vector2(startButton.anchoredPosition.y, startButtonInitialPosition);
+        difficultyPanel.anchoredPosition = new Vector2(difficultyPanel.anchoredPosition.x, difficultyInitialPosition);
+
+        Vector2 gameNamePosition = gameNamePanel.anchoredPosition;
+        gameNamePosition.x = -gameNameInitialPosition * 2;
+        gameNamePanel.anchoredPosition = gameNamePosition;
     }
 }

@@ -4,6 +4,8 @@ using DG.Tweening;
 
 public class AnimationManagerGame : MonoBehaviour
 {
+    [SerializeField] private TurnManager turnManager;
+
     private float elapsedTime = 0f;
     private float fadeOutDuration = 1f;
 
@@ -24,6 +26,16 @@ public class AnimationManagerGame : MonoBehaviour
 
     // ------------------------------------------------------------------------------------------------------
 
+    [SerializeField] private RectTransform turn;
+    private Vector2 turnInitialPosition = new Vector2(1000f, 310f);
+    private Vector2 turnFinalPosition;
+    private float turnTweenDuration = 1.6f;
+    private float turnFloatSpeed = .8f;
+    private float turnFloatAmplitude = 12f;
+    private bool turnHasEntered;
+
+    // ------------------------------------------------------------------------------------------------------
+
     [SerializeField] private RectTransform score;
     private Vector2 scoreInitialPosition = new Vector2(1000f, 310f);
     private Vector2 scoreFinalPosition;
@@ -35,16 +47,6 @@ public class AnimationManagerGame : MonoBehaviour
 
     // ------------------------------------------------------------------------------------------------------
 
-    [SerializeField] private RectTransform turn;
-    private Vector2 turnInitialPosition = new Vector2(1000f, 310f);
-    private Vector2 turnFinalPosition;
-    private float turnTweenDuration = 1.6f;
-    private float turnFloatSpeed = .8f;
-    private float turnFloatAmplitude = 12f;
-    private bool turnHasEntered;
-
-    // ------------------------------------------------------------------------------------------------------
-
     [SerializeField] private RectTransform scorePopInText;
     private Vector2 scorePopInInitialPosition = new Vector2(0f, 0f);    
     private Vector2 scorePopInFinalPosition = new Vector2(0f, 80f);    
@@ -52,11 +54,11 @@ public class AnimationManagerGame : MonoBehaviour
         
     // ------------------------------------------------------------------------------------------------------
     
-
     public void OnScorePopInEnter()
     {
         float rotationValue = Random.Range(-5f, 5f);
         TextMeshProUGUI textComponent = scorePopInText.GetComponent<TextMeshProUGUI>();
+
         // reset
         scorePopInText.DOAnchorPosY(scorePopInInitialPosition.y, 0);
         textComponent.DOColor(new Color(textComponent.color.r, textComponent.color.g, textComponent.color.b, 1), 0);
@@ -72,7 +74,6 @@ public class AnimationManagerGame : MonoBehaviour
     {
         ticTacToeBoard.DOAnchorPosY(ticTacToeBoardFinalPositionY, ticTacToeBoardTweenDuration);
     }
-
 
     private void OnExitButtonEnter()
     {
@@ -99,7 +100,17 @@ public class AnimationManagerGame : MonoBehaviour
         turn.anchoredPosition = new Vector2(turnFinalPosition.x, newY);
     }
 
+    public void TurnRotateForward()
+    {
+        turn.DORotate(new Vector3(0, 40f, 0), 1f);
+    }
+    
+    public void TurnRotateBack()
+    {
+        turn.DORotate(new Vector3(0, -40f, 0), 1f);
+    }
 
+    
     private void OnScoreEnter()
     {
         score.DOAnchorPosX(scoreFinalPosition.x, scoreTweenDuration).OnComplete(() => scoreHasEntered = true);
@@ -112,14 +123,13 @@ public class AnimationManagerGame : MonoBehaviour
 
         float newY = scoreFinalPosition.y + Mathf.Sin(Time.time * scoreFloatSpeed) * scoreFloatAmplitude;
         score.anchoredPosition = new Vector2(scoreFinalPosition.x, newY);
-
-        if (!isRotating)
-        {
-            float rotationValue = Random.Range(-5f, 5f);
-            isRotating = true;
-            score.DORotate(new Vector3(0, 0, rotationValue), 3f).OnComplete(() => isRotating = false);
-        }
     }
+
+    public void ScoreRotate()
+    {
+        score.DOLocalRotate(new Vector3(0f, 0f, 360f), .3f, RotateMode.FastBeyond360);
+    }
+
 
     void Start()
     {
@@ -158,5 +168,4 @@ public class AnimationManagerGame : MonoBehaviour
 
         exitButton.anchoredPosition = new Vector2(exitButtonInitialPosition.x, exitButtonInitialPosition.y);
     }
-
 }
