@@ -4,7 +4,6 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private AnimationManagerGame animationManager;
-    
     [SerializeField] private TextMeshProUGUI scoreText;
 
     private int playerScore = 0;

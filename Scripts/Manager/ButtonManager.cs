@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class ButtonManager : MonoBehaviour
 {
-    public TicTacToeManager gameManager;
+    public GameManager gameManager;
 
     public void OnClick()
     {

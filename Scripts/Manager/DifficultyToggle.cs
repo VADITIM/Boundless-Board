@@ -14,7 +14,7 @@ public class DifficultyToggle : MonoBehaviour
     {
         hardModeToggle.onValueChanged.AddListener(OnToggleChanged);
          
-        bool isHardMode = PlayerPrefs.GetInt("HardMode", 0) == 1; // Load the saved state
+        bool isHardMode = PlayerPrefs.GetInt("HardMode", 0) == 1; // load saved state
         hardModeToggle.isOn = isHardMode;
         UpdateText(isHardMode);
     }
@@ -22,10 +22,9 @@ public class DifficultyToggle : MonoBehaviour
     private void OnToggleChanged(bool isOn)
     {
         PlaySound(toggleSound);
+        UpdateText(isOn);
         PlayerPrefs.SetInt("HardMode", isOn ? 1 : 0);
         PlayerPrefs.Save();
-        Debug.Log("Hard Mode: " + (isOn ? "Enabled" : "Disabled"));
-        UpdateText(isOn);
     }
 
     private void UpdateText(bool isOn)
