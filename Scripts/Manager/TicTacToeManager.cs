@@ -100,22 +100,20 @@ public class TicTacToeManager : MonoBehaviour
 
         if (isHardMode)
         {
-            // Hard mode logic
-            movePosition = FindWinningMove("O"); // Try to win
+            movePosition = FindWinningMove("O"); 
 
             if (movePosition == -1)
             {
-                movePosition = FindBlockingMove(); // Block player's winning move
+                movePosition = FindBlockingMove();
             }
 
             if (movePosition == -1)
             {
-                movePosition = FindBestStrategicMove(); // Use strategic move logic
+                movePosition = FindBestStrategicMove();
             }
         }
         else
         {
-            // easy mode logic
             List<int> availableButtons = new List<int>();
             for (int i = 0; i < buttonImages.Length; i++)
             {
@@ -135,7 +133,7 @@ public class TicTacToeManager : MonoBehaviour
         {
             buttonImages[movePosition].sprite = GetCurrentSprite();
             RegisterMove(movePosition);
-            buttonImages[movePosition].color = new Color(1f, 1f, 1f, 1f); // Fully opaque
+            buttonImages[movePosition].color = new Color(1f, 1f, 1f, 1f); 
             Debug.Log($"AI moved to button {movePosition}");
         }
 
@@ -155,17 +153,14 @@ public class TicTacToeManager : MonoBehaviour
 
     private int FindBestStrategicMove()
     {
-        // prioritize center
         if (buttonImages[4].sprite == null) return 4;
 
-        // then corners
         int[] corners = { 0, 2, 6, 8 };
         foreach (int corner in corners)
         {
             if (buttonImages[corner].sprite == null) return corner;
         }
 
-        // Finally, edges
         int[] edges = { 1, 3, 5, 7 };
         foreach (int edge in edges)
         {
@@ -175,13 +170,11 @@ public class TicTacToeManager : MonoBehaviour
         return -1;
     }
 
-    // find a move to win the game
     private int FindWinningMove(string player)
     {
         return FindCriticalMove(player, ignoreTinted: false);
     }
 
-    // find a move to prevent player from winning
     private int FindBlockingMove()
     {
         return FindCriticalMove("X", ignoreTinted: true);
@@ -191,9 +184,9 @@ public class TicTacToeManager : MonoBehaviour
     {
         int[,] winConditions = new int[,]
         {
-            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // rows
-            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, // columns
-            {0, 4, 8}, {2, 4, 6}             // diagonals
+            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, 
+            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, 
+            {0, 4, 8}, {2, 4, 6}             
         };
 
         Sprite checkSprite = player == "X" ? playerSprite : aiSprite;
@@ -224,7 +217,7 @@ public class TicTacToeManager : MonoBehaviour
                 return emptyPosition;
             }
         }
-        return -1; // no critical move found
+        return -1;
     }
 
     private void RegisterMove(int buttonIndex)
@@ -232,7 +225,6 @@ public class TicTacToeManager : MonoBehaviour
         moveHistory.Enqueue(buttonIndex);
         totalMoves++;
     
-        // after 6 moves, start removing the oldest move
         if (moveHistory.Count > 6)
         {
             int oldestIndex = moveHistory.Dequeue();
@@ -240,7 +232,6 @@ public class TicTacToeManager : MonoBehaviour
             buttonImages[oldestIndex].color = new Color(1f, 1f, 1f, 0f); 
         }
     
-        // the oldest move will be tinted
         int[] movesArray = moveHistory.ToArray();
         int tintedCount = Mathf.Max(movesArray.Length - 4, 0);
     
@@ -258,9 +249,9 @@ public class TicTacToeManager : MonoBehaviour
     {
         int[,] winConditions = new int[,]
         {
-            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // Rows
-            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, // Columns
-            {0, 4, 8}, {2, 4, 6}             // Diagonals
+            {0, 1, 2}, {3, 4, 5}, {6, 7, 8},
+            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, 
+            {0, 4, 8}, {2, 4, 6}           
         };
     
         for (int i = 0; i < winConditions.GetLength(0); i++)
@@ -268,7 +259,6 @@ public class TicTacToeManager : MonoBehaviour
             Sprite firstSprite = buttonImages[winConditions[i, 0]].sprite;
             if (firstSprite == null) continue;
 
-            // Get the corresponding tinted version based on the first sprite
             Sprite correspondingTinted = (firstSprite == playerSprite || firstSprite == tintedPlayerSprite) 
                 ? tintedPlayerSprite 
                 : tintedAiSprite;
@@ -277,7 +267,6 @@ public class TicTacToeManager : MonoBehaviour
                 ? playerSprite
                 : aiSprite;
 
-            // check if all three positions have same sprite
             if ((buttonImages[winConditions[i, 1]].sprite == correspondingRegular || 
                  buttonImages[winConditions[i, 1]].sprite == correspondingTinted) &&
                 (buttonImages[winConditions[i, 2]].sprite == correspondingRegular || 
